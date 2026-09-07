@@ -17,7 +17,7 @@ export const medicalHistoryApi = {
   },
 
   async updateHistory(historyId, updateData) {
-    const response = await apiClient.put(`/medical-history/${historyId}`, updateData);
+    const response = await apiClient.patch(`/medical-history/${historyId}`, updateData);
     return response.data;
   },
 };

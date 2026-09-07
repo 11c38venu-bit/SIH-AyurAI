@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   User,
   Stethoscope,
@@ -10,7 +10,9 @@ import {
   Lock,
   Mail,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  KeyRound,
+  ShieldCheck
 } from 'lucide-react';
 import { useTranslation } from '../../i18n/I18nContext';
 import { useAuth, ROLES } from '../../services/authContext';
@@ -23,26 +25,55 @@ export const LoginPage = () => {
   const { t } = useTranslation();
   const { switchRole, loginWithCredentials, role: currentRole } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [selectedRole, setSelectedRole] = useState(currentRole || ROLES.PATIENT);
+  const queryRole = searchParams.get('role');
+  const queryRedirect = searchParams.get('redirect');
+
+  const getRoleEmail = (roleKey) => {
+    if (roleKey === ROLES.DOCTOR) return 'doctor@demo.ayurai';
+    if (roleKey === ROLES.STAFF) return 'staff@demo.ayurai';
+    if (roleKey === ROLES.ADMIN) return 'admin@demo.ayurai';
+    if (roleKey === ROLES.PATIENT) return 'patient@demo.ayurai';
+    return '';
+  };
+
+  const initialRole = queryRole && [ROLES.PATIENT, ROLES.DOCTOR, ROLES.STAFF, ROLES.ADMIN].includes(queryRole.toLowerCase())
+    ? queryRole.toLowerCase()
+    : (currentRole || ROLES.DOCTOR);
+
+  const [selectedRole, setSelectedRole] = useState(initialRole);
   const [isCustomMode, setIsCustomMode] = useState(false);
-  const [email, setEmail] = useState('doctor@ayurai.com');
-  const [password, setPassword] = useState('doctor123');
+  const [email, setEmail] = useState(() => getRoleEmail(initialRole));
+  const [password, setPassword] = useState('demo123');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (queryRole && [ROLES.PATIENT, ROLES.DOCTOR, ROLES.STAFF, ROLES.ADMIN].includes(queryRole.toLowerCase())) {
+      const roleKey = queryRole.toLowerCase();
+      setSelectedRole(roleKey);
+      setEmail(getRoleEmail(roleKey));
+    }
+  }, [queryRole]);
+
+  // 1-Click Instant Login for Demo Role Selection
   const handleRoleSelect = async (roleKey) => {
     setSelectedRole(roleKey);
-    setIsLoading(true);
     setErrorMessage('');
+    setIsLoading(true);
+
     try {
-      await switchRole(roleKey);
-      if (roleKey === ROLES.PATIENT) navigate('/patient');
-      else if (roleKey === ROLES.DOCTOR) navigate('/doctor');
-      else if (roleKey === ROLES.STAFF) navigate('/staff');
-      else if (roleKey === ROLES.ADMIN) navigate('/admin');
+      switchRole(roleKey);
+      let destination = `/${roleKey}`;
+      if (queryRedirect && queryRedirect.startsWith(`/${roleKey}`)) {
+        destination = queryRedirect;
+      }
+      navigate(destination);
     } catch (e) {
-      setErrorMessage('Failed to sign in. Please try again.');
+      setErrorMessage('Failed to sign in. Please try entering credentials below.');
+      setEmail(getRoleEmail(roleKey));
+      setIsCustomMode(true);
     } finally {
       setIsLoading(false);
     }
@@ -50,23 +81,24 @@ export const LoginPage = () => {
 
   const handleCustomSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setErrorMessage('Please enter both email and password.');
+    if (!email) {
+      setErrorMessage('Please enter an email or username.');
       return;
     }
     setIsLoading(true);
     setErrorMessage('');
-    const result = await loginWithCredentials(email, password);
+    const result = await loginWithCredentials(email, password || 'demo123');
     setIsLoading(false);
 
     if (result.success) {
-      const userRole = result.role;
-      if (userRole === 'admin') navigate('/admin');
-      else if (userRole === 'doctor') navigate('/doctor');
-      else if (userRole === 'staff') navigate('/staff');
-      else navigate('/patient');
+      const userRole = result.role || 'doctor';
+      let destination = `/${userRole}`;
+      if (queryRedirect && queryRedirect.startsWith(`/${userRole}`)) {
+        destination = queryRedirect;
+      }
+      navigate(destination);
     } else {
-      setErrorMessage(result.message || 'Authentication failed. Please verify credentials.');
+      setErrorMessage(result.message || 'Authentication failed.');
     }
   };
 
@@ -123,29 +155,32 @@ export const LoginPage = () => {
         </a>
 
         <div className="flex items-center gap-3">
+          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+            SIH DEMO MODE
+          </span>
           <LanguageSelector variant="dropdown" />
         </div>
       </div>
 
       {/* Main Container */}
-      <div className="max-w-4xl w-full mx-auto my-8">
-        <div className="text-center max-w-xl mx-auto mb-8 space-y-2">
+      <div className="max-w-4xl w-full mx-auto my-8 space-y-6">
+        <div className="text-center max-w-xl mx-auto space-y-2">
           <Badge variant="primary" size="sm">SIH 2026 Interactive Session</Badge>
           <h2 className="text-3xl font-bold text-slate-900">{t('auth.signInTitle')}</h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            {t('auth.signInSubtitle')}
+            Click any role card below for <strong>instant 1-click access</strong> into the AYURAI workspace.
           </p>
         </div>
 
         {errorMessage && (
-          <div className="max-w-md mx-auto mb-6 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2.5 shadow-xs animate-in fade-in">
+          <div className="max-w-md mx-auto p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2.5 shadow-xs animate-in fade-in">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
         {/* 1-Click Role Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {rolesList.map((r) => {
             const Icon = r.icon;
             const isSelected = selectedRole === r.role;
@@ -174,29 +209,58 @@ export const LoginPage = () => {
                   <span>{r.title}</span>
                   <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-ayur-700 group-hover:translate-x-1 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed mb-2">
                   {r.description}
                 </p>
+                <span className="text-[11px] text-teal-800 font-bold flex items-center gap-1 group-hover:underline">
+                  <span>Instant 1-Click Enter →</span>
+                </span>
               </div>
             );
           })}
         </div>
 
-        {/* Custom Credential Toggle Form */}
-        <div className="max-w-md mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-100">
-            <span className="font-semibold text-slate-700">Custom Credentials Login</span>
+        {/* Demo Credentials Reference Box */}
+        <div className="max-w-2xl mx-auto p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 text-xs">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <span className="font-bold text-slate-900 flex items-center gap-1.5">
+              <KeyRound className="w-4 h-4 text-teal-700" />
+              <span>Demo Credentials (Password: demo123)</span>
+            </span>
             <button
               type="button"
               onClick={() => setIsCustomMode(!isCustomMode)}
-              className="text-ayur-700 font-medium hover:underline"
+              className="text-ayur-700 font-semibold hover:underline"
             >
-              {isCustomMode ? 'Hide Form' : 'Show Form'}
+              {isCustomMode ? 'Hide Custom Login' : 'Enter Custom Login'}
             </button>
           </div>
 
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+            <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-[10px] text-slate-400 font-bold block">Doctor (Vaidya)</span>
+              <strong className="text-slate-900 block font-mono">doctor@demo.ayurai</strong>
+              <span className="text-[10px] text-teal-700">demo123</span>
+            </div>
+            <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-[10px] text-slate-400 font-bold block">Frontdesk Staff</span>
+              <strong className="text-slate-900 block font-mono">staff@demo.ayurai</strong>
+              <span className="text-[10px] text-teal-700">demo123</span>
+            </div>
+            <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-[10px] text-slate-400 font-bold block">Hospital Admin</span>
+              <strong className="text-slate-900 block font-mono">admin@demo.ayurai</strong>
+              <span className="text-[10px] text-teal-700">demo123</span>
+            </div>
+            <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-[10px] text-slate-400 font-bold block">Patient Portal</span>
+              <strong className="text-slate-900 block font-mono">patient@demo.ayurai</strong>
+              <span className="text-[10px] text-teal-700">demo123</span>
+            </div>
+          </div>
+
           {isCustomMode && (
-            <form onSubmit={handleCustomSubmit} className="space-y-3.5 pt-1">
+            <form onSubmit={handleCustomSubmit} className="space-y-3 pt-3 border-t border-slate-100">
               <Input
                 label="Email / Username"
                 type="text"
@@ -220,23 +284,16 @@ export const LoginPage = () => {
                 icon={ArrowRight}
                 iconPosition="right"
               >
-                Sign In to System
+                Sign In with Credentials
               </Button>
             </form>
-          )}
-
-          {!isCustomMode && (
-            <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
-              <CheckCircle2 className="w-4 h-4 text-ayur-600" />
-              <span>Instant prototype access active. Click any role card above to test.</span>
-            </div>
           )}
         </div>
       </div>
 
       {/* Footer Disclaimer */}
       <div className="text-center text-xs text-slate-400 py-2">
-        <p>AYURAI • Classical Ayurvedic Patient Care Platform • SIH 2026</p>
+        <p>AYURAI • Classical Ayurvedic Patient Care Platform • SIH 2026 Interactive Session</p>
       </div>
     </div>
   );

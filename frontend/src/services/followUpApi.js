@@ -32,29 +32,29 @@ export const followUpApi = {
   },
 
   async confirmFollowUp(followUpId, confirmData = {}) {
-    const response = await apiClient.post(`/follow-ups/${followUpId}/confirm`, confirmData);
+    const response = await apiClient.patch(`/follow-ups/${followUpId}/confirm`, confirmData);
     return response.data;
   },
 
   async completeFollowUp(followUpId, completeData = {}) {
-    const response = await apiClient.post(`/follow-ups/${followUpId}/complete`, completeData);
+    const response = await apiClient.patch(`/follow-ups/${followUpId}/complete`, completeData);
     return response.data;
   },
 
   async markMissed(followUpId, missedData = {}) {
-    const response = await apiClient.post(`/follow-ups/${followUpId}/missed`, missedData);
+    const response = await apiClient.patch(`/follow-ups/${followUpId}/missed`, missedData);
     return response.data;
   },
 
   async cancelFollowUp(followUpId, cancellationReason) {
-    const response = await apiClient.post(`/follow-ups/${followUpId}/cancel`, {
+    const response = await apiClient.patch(`/follow-ups/${followUpId}/cancel`, {
       cancellation_reason: cancellationReason,
     });
     return response.data;
   },
 
   async recordFollowUpVisit(followUpId, visitData) {
-    const response = await apiClient.post(`/follow-ups/${followUpId}/visits`, visitData);
+    const response = await apiClient.post(`/follow-ups/${followUpId}/visit`, visitData);
     return response.data;
   },
 };

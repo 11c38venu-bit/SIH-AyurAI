@@ -36,7 +36,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
           { to: '/patient', icon: Home, label: 'Dashboard & Tracker', end: true },
           { to: '/patient/welcome', icon: Sparkles, label: 'Language Selection' },
           { to: '/patient/register', icon: UserPlus, label: '1. Registration' },
-          { to: '/patient/token', icon: Clock, label: '2. Token Tracker', badge: user.tokenNumber },
+          { to: '/patient/token', icon: Clock, label: '2. Token Tracker', badge: user?.tokenNumber },
           { to: '/patient/case-taking', icon: ClipboardList, label: '3. AI Case Taking', highlight: true },
           { to: '/patient/assessment', icon: Activity, label: '4. Ayurvedic Assessment' },
           { to: '/patient/medical-history', icon: FileText, label: '5. Medical History' },
@@ -196,13 +196,13 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
         <div className="p-3 border-t border-slate-800 bg-slate-950/40 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <img
-              src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-              alt={user.name}
+              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
+              alt={user?.name || 'User'}
               className="w-8 h-8 rounded-full object-cover border border-slate-700 shrink-0"
             />
             <div className="truncate">
-              <p className="text-xs font-semibold text-white truncate">{user.name}</p>
-              <p className="text-[10px] text-slate-400 capitalize">{user.role}</p>
+              <p className="text-xs font-semibold text-white truncate">{user?.name || 'AyurAI User'}</p>
+              <p className="text-[10px] text-slate-400 capitalize">{user?.role || role}</p>
             </div>
           </div>
           <NavLink

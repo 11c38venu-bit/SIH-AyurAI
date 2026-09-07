@@ -7,6 +7,7 @@ import LoginPage from '../pages/public/LoginPage';
 
 // Layout Shell
 import AppShell from '../components/layout/AppShell';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
 
 // Patient Pages
 import PatientDashboard from '../pages/patient/PatientDashboard';
@@ -50,7 +51,7 @@ export const AppRoutes = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Patient Portal Routes */}
+      {/* Patient Portal Routes (Guest / Unprotected) */}
       <Route path="/patient" element={<AppShell />}>
         <Route index element={<PatientDashboard />} />
         <Route path="welcome" element={<PatientWelcome />} />
@@ -66,8 +67,15 @@ export const AppRoutes = () => {
         <Route path="follow-up" element={<FollowUpTracker />} />
       </Route>
 
-      {/* Doctor Portal Routes */}
-      <Route path="/doctor" element={<AppShell />}>
+      {/* Doctor Portal Routes (Protected) */}
+      <Route
+        path="/doctor"
+        element={
+          <ProtectedRoute requiredRole="DOCTOR">
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<DoctorDashboard />} />
         <Route path="queue" element={<DoctorQueue />} />
         <Route path="patients" element={<PatientList />} />
@@ -76,15 +84,29 @@ export const AppRoutes = () => {
         <Route path="prescription/:id" element={<PrescriptionBuilder />} />
       </Route>
 
-      {/* Staff Portal Routes */}
-      <Route path="/staff" element={<AppShell />}>
+      {/* Staff Portal Routes (Protected) */}
+      <Route
+        path="/staff"
+        element={
+          <ProtectedRoute requiredRole="STAFF">
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<StaffDashboard />} />
         <Route path="registration" element={<DeskRegistration />} />
         <Route path="queue" element={<DeskQueueManager />} />
       </Route>
 
-      {/* Admin Portal Routes */}
-      <Route path="/admin" element={<AppShell />}>
+      {/* Admin Portal Routes (Protected) */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute requiredRole="ADMIN">
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<AdminDashboard />} />
         <Route path="doctors" element={<DoctorsManagement />} />
         <Route path="staff" element={<StaffManagement />} />

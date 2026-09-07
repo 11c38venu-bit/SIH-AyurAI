@@ -111,19 +111,19 @@ export const LandingPage = () => {
                 </Button>
               </NavLink>
 
-              <NavLink to="/doctor">
+              <NavLink to="/login?role=doctor&redirect=/doctor">
                 <Button variant="outline" size="lg" icon={Stethoscope} className="font-semibold">
                   Vaidya Doctor Portal
                 </Button>
               </NavLink>
 
-              <NavLink to="/staff">
+              <NavLink to="/login?role=staff&redirect=/staff">
                 <Button variant="secondary" size="lg" icon={UserCheck} className="font-semibold">
                   Staff Desk & Triage
                 </Button>
               </NavLink>
 
-              <NavLink to="/admin">
+              <NavLink to="/login?role=admin&redirect=/admin">
                 <Button variant="secondary" size="lg" icon={Building2} className="font-semibold">
                   Admin Analytics
                 </Button>
@@ -704,7 +704,7 @@ export const LandingPage = () => {
                   Frontdesk queue management, patient verification, and red-flag triage validation.
                 </p>
               </div>
-              <NavLink to="/staff" className="block pt-2">
+              <NavLink to="/login?role=staff&redirect=/staff" className="block pt-2">
                 <Button variant="outline" className="w-full text-xs font-semibold" icon={ChevronRight} iconPosition="right">
                   Launch Staff Desk
                 </Button>
@@ -722,7 +722,7 @@ export const LandingPage = () => {
                   14-point structured clinical summary, Ashtavidha Pariksha, and classical Rx builder.
                 </p>
               </div>
-              <NavLink to="/doctor" className="block pt-2">
+              <NavLink to="/login?role=doctor&redirect=/doctor" className="block pt-2">
                 <Button variant="outline" className="w-full text-xs font-semibold" icon={ChevronRight} iconPosition="right">
                   Launch Doctor Desk
                 </Button>
@@ -740,7 +740,7 @@ export const LandingPage = () => {
                   Healthcare operations analytics, doctor/staff rosters, and clinical governance settings.
                 </p>
               </div>
-              <NavLink to="/admin" className="block pt-2">
+              <NavLink to="/login?role=admin&redirect=/admin" className="block pt-2">
                 <Button variant="outline" className="w-full text-xs font-semibold" icon={ChevronRight} iconPosition="right">
                   Launch Admin Suite
                 </Button>

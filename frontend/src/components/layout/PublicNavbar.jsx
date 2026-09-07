@@ -21,8 +21,8 @@ export const PublicNavbar = () => {
               <span className="font-display font-black text-xl tracking-tight text-slate-900">
                 AYUR<span className="text-ayur-700">AI</span>
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-ayur-100 text-ayur-900 border border-ayur-300 tracking-wide uppercase">
-                SIH 2026
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 tracking-wide uppercase">
+                SIH DEMO MODE
               </span>
             </div>
             <p className="text-xs text-slate-500 font-medium hidden sm:block leading-tight">

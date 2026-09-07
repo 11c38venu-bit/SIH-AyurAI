@@ -4,7 +4,7 @@ export const caseApi = {
   async getQuestions(category = null) {
     const params = {};
     if (category) params.category = category;
-    const response = await apiClient.get('/cases/questions', { params });
+    const response = await apiClient.get('/case-questions/', { params });
     return response.data;
   },
 

@@ -18,6 +18,7 @@ import {
   Globe2,
   AlertTriangle,
   CheckCircle2,
+  Check,
   UserPlus,
   FileText,
   Sliders,

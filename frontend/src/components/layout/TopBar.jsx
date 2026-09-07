@@ -31,7 +31,7 @@ export const TopBar = ({ onOpenMobileMenu }) => {
   ];
 
   const notifications = [
-    { id: 1, title: 'Token A-024 Ready', desc: 'OPD Room 102 is calling your token now.', time: '2m ago', type: 'token' },
+    { id: 1, title: 'Token A-024 Called', desc: 'OPD Suite 102 is calling token A-024 now.', time: '2m ago', type: 'token' },
     { id: 2, title: 'AI Case Synthesis Ready', desc: 'Preliminary Ashtavidha synthesis generated for Vaidya review.', time: '10m ago', type: 'ai' },
     { id: 3, title: 'New Lab Document Added', desc: 'Blood report uploaded successfully to EHR.', time: '1h ago', type: 'doc' },
   ];
@@ -61,8 +61,14 @@ export const TopBar = ({ onOpenMobileMenu }) => {
         </div>
       </div>
 
-      {/* Right: Language Selector, AI Status, Role Switcher, Notifications, Profile */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
+      {/* Right: Demo Mode Badge, Language Selector, AI Status, Role Switcher, Notifications, Profile */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Subtle SIH Demo Mode Indicator */}
+        <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-300 text-[11px] font-bold text-amber-900 shadow-2xs">
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+          <span>SIH DEMO MODE</span>
+        </span>
+
         {/* Prominent Multilingual Selector */}
         <LanguageSelector variant="dropdown" />
 
@@ -160,8 +166,8 @@ export const TopBar = ({ onOpenMobileMenu }) => {
         {/* User Profile Thumbnail */}
         <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
           <img
-            src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-            alt={user.name}
+            src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
+            alt={user?.name || 'User'}
             className="w-8 h-8 rounded-full object-cover border border-slate-300 shrink-0"
           />
         </div>

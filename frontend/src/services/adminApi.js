@@ -17,12 +17,12 @@ export const adminApi = {
   },
 
   async updateUser(userId, userData) {
-    const response = await apiClient.put(`/admin/users/${userId}`, userData);
+    const response = await apiClient.patch(`/admin/users/${userId}`, userData);
     return response.data;
   },
 
   async updateUserRole(userId, newRole, justification = null) {
-    const response = await apiClient.put(`/admin/users/${userId}/role`, {
+    const response = await apiClient.patch(`/admin/users/${userId}/role`, {
       new_role: newRole,
       justification,
     });
@@ -30,12 +30,12 @@ export const adminApi = {
   },
 
   async activateUser(userId) {
-    const response = await apiClient.put(`/admin/users/${userId}/activate`);
+    const response = await apiClient.patch(`/admin/users/${userId}/activate`);
     return response.data;
   },
 
   async deactivateUser(userId) {
-    const response = await apiClient.put(`/admin/users/${userId}/deactivate`);
+    const response = await apiClient.patch(`/admin/users/${userId}/deactivate`);
     return response.data;
   },
 

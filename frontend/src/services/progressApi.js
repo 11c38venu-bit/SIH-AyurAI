@@ -22,17 +22,17 @@ export const progressApi = {
   },
 
   async getPatientTimeline(patientId) {
-    const response = await apiClient.get(`/progress/timeline/patient/${patientId}`);
+    const response = await apiClient.get(`/progress/patient/${patientId}/timeline`);
     return response.data;
   },
 
   async getPatientSummary(patientId) {
-    const response = await apiClient.get(`/progress/summary/patient/${patientId}`);
+    const response = await apiClient.get(`/progress/patient/${patientId}/summary`);
     return response.data;
   },
 
-  async getPatientComparison(patientId) {
-    const response = await apiClient.get(`/progress/comparison/patient/${patientId}`);
+  async getPatientComparison(patientId, params = {}) {
+    const response = await apiClient.get(`/progress/patient/${patientId}/compare`, { params });
     return response.data;
   },
 

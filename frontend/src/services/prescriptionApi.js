@@ -32,12 +32,12 @@ export const prescriptionApi = {
   },
 
   async finalizePrescription(prescriptionId) {
-    const response = await apiClient.post(`/prescriptions/${prescriptionId}/finalize`);
+    const response = await apiClient.patch(`/prescriptions/${prescriptionId}/finalize`);
     return response.data;
   },
 
   async cancelPrescription(prescriptionId, cancellationReason) {
-    const response = await apiClient.post(`/prescriptions/${prescriptionId}/cancel`, {
+    const response = await apiClient.patch(`/prescriptions/${prescriptionId}/cancel`, {
       cancellation_reason: cancellationReason,
     });
     return response.data;

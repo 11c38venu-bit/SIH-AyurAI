@@ -37,7 +37,7 @@ export const documentApi = {
   },
 
   async reviewExtractedData(documentId, reviewData) {
-    const response = await apiClient.put(`/document-processing/${documentId}/review`, reviewData);
+    const response = await apiClient.patch(`/document-processing/${documentId}/review`, reviewData);
     return response.data;
   },
 };

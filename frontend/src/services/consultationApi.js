@@ -27,12 +27,12 @@ export const consultationApi = {
   },
 
   async completeConsultation(consultationId, completeData = {}) {
-    const response = await apiClient.post(`/consultations/${consultationId}/complete`, completeData);
+    const response = await apiClient.patch(`/consultations/${consultationId}/complete`, completeData);
     return response.data;
   },
 
   async cancelConsultation(consultationId, cancellationReason) {
-    const response = await apiClient.post(`/consultations/${consultationId}/cancel`, {
+    const response = await apiClient.patch(`/consultations/${consultationId}/cancel`, {
       cancellation_reason: cancellationReason,
     });
     return response.data;
